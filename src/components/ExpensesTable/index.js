@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Button from './shared/Button';
+import Button from '../shared/Button';
 
 const Table = styled.table`
   border-collapse: collapse;

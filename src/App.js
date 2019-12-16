@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
 import shortid from 'shortid';
 import BudgetForm from './components/BudgetForm';
@@ -19,53 +20,54 @@ const Container = styled.div`
 `;
 
 const calculateTotalExpenses = expenses => {
-  return expenses.reduce((total, expense) => total + expense.amount, 0);
+  // return expenses.reduce((total, expense) => total + expense.amount, 0);
 };
 
 const calculateBalance = (budget, expenses) => budget - expenses;
 
-export default class App extends Component {
-  state = {
-    budget: 0,
-    expenses: [],
+const App = ({ budget, expenses = [] }) => {
+  const saveBudget = value => {
+    // this.setState({ budget: value });
   };
 
-  saveBudget = value => {
-    this.setState({ budget: value });
-  };
-
-  addExpense = ({ name, amount }) => {
+  const addExpense = ({ name, amount }) => {
     const expense = {
       id: shortid.generate(),
       name,
       amount: Number(amount),
     };
 
-    this.setState(state => ({
-      expenses: [expense, ...state.expenses],
-    }));
+    // this.setState(state => ({
+    //   expenses: [expense, ...state.expenses],
+    // }));
   };
 
-  removeExpense = id => {
-    this.setState(state => ({
-      expenses: state.expenses.filter(expense => expense.id !== id),
-    }));
+  const removeExpense = id => {
+    // this.setState(state => ({
+    //   expenses: state.expenses.filter(expense => expense.id !== id),
+    // }));
   };
 
-  render() {
-    const { expenses, budget } = this.state;
-    const totalExpenses = calculateTotalExpenses(expenses);
-    const balance = calculateBalance(budget, totalExpenses);
+  // const { expenses, budget } = this.state;
+  const totalExpenses = calculateTotalExpenses(expenses);
+  const balance = calculateBalance(budget, totalExpenses);
 
-    return (
-      <Container>
-        <BudgetForm onSave={this.saveBudget} />
-        <Values budget={budget} expenses={totalExpenses} balance={balance} />
-        <ExpenseForm onSave={this.addExpense} />
-        {expenses.length > 0 && (
-          <ExpensesTable items={expenses} onRemove={this.removeExpense} />
-        )}
-      </Container>
-    );
-  }
-}
+  return (
+    <Container>
+      <BudgetForm onSave={saveBudget} />
+      <Values budget={budget} expenses={totalExpenses} balance={balance} />
+      <ExpenseForm onSave={addExpense} />
+      {expenses.length > 0 && (
+        <ExpensesTable items={expenses} onRemove={removeExpense} />
+      )}
+    </Container>
+  );
+};
+
+const mapStateToProps = state => ({
+  budget: state,
+});
+
+const mapDispatchToProps = dispatch => ({});
+
+export default connect(mapStateToProps)(App);

@@ -1,10 +1,11 @@
 import { createStore } from 'redux';
+import { devToolsEnhancer } from 'redux-devtools-extension';
+import budgetReducer from './budgetReducer';
 
-const rootReducer = (a, b) => {
-  console.log('a :', a);
-  console.log('b :', b);
-  return a;
-};
-const store = createStore(rootReducer);
+// const rootReducer = (state = {}, action) => {
+//   console.log('action :', action);
+//   return state;
+// };
+const store = createStore(budgetReducer, devToolsEnhancer());
 
 export default store;

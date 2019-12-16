@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Value from './Value';
+import Value from '../Value';
 
 const Container = styled.section`
   display: inline-flex;
