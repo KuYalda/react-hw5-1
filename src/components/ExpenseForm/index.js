@@ -1,17 +1,13 @@
 import React, { useState } from 'react';
-import Form from '../shared/Form';
-import Label from '../shared/Label';
-import Input from '../shared/Input';
-import Button from '../shared/Button';
+import { connect } from 'react-redux';
+import { addExpense } from '../../redux/expensesActions';
+import shortid from 'shortid';
+import ExpenseForm from './ExpenseForm';
 
-const labelStyles = `
-  margin-bottom: 16px;  
-`;
-
-const ExpenseForm = ({ onSave }) => {
+const ExpenseFormContainer = ({ onSave }) => {
   const [expense, setExpense] = useState({
     name: '',
-    amount: 0,
+    amount: '',
   });
 
   const handleChange = ({ target: { name, value } }) => {
@@ -20,35 +16,23 @@ const ExpenseForm = ({ onSave }) => {
 
   const handleSubmit = e => {
     e.preventDefault();
+    const expenseID = shortid();
 
-    onSave({ ...expense });
-    setExpense({ name: '', amount: 0 });
+    onSave(expense, expenseID);
+    setExpense({ name: '', amount: '' });
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Label customStyles={labelStyles}>
-        Enter expense name
-        <Input
-          type="text"
-          name="name"
-          value={expense.name}
-          onChange={handleChange}
-        />
-      </Label>
-      <Label customStyles={labelStyles}>
-        Enter expense amount
-        <Input
-          type="number"
-          name="amount"
-          value={expense.amount}
-          onChange={handleChange}
-        />
-      </Label>
-
-      <Button label="Add" type="submit" />
-    </Form>
+    <ExpenseForm
+      item={expense}
+      onSubmit={handleSubmit}
+      onChange={handleChange}
+    />
   );
 };
 
-export default ExpenseForm;
+const mapDispatchToProps = dispatch => ({
+  onSave: (expense, id) => dispatch(addExpense(expense, id)),
+});
+
+export default connect(null, mapDispatchToProps)(ExpenseFormContainer);

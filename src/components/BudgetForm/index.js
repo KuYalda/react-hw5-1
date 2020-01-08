@@ -1,37 +1,33 @@
 import React, { useState } from 'react';
-import Form from '../shared/Form';
-import Label from '../shared/Label';
-import Input from '../shared/Input';
-import Button from '../shared/Button';
+import { connect } from 'react-redux';
+import { setBudget } from '../../redux/budgetActions';
+import BudgetForm from './BudgetForm';
 
-const labelStyles = `
-  margin-bottom: 16px;  
-`;
-
-const BudgetForm = ({ onSave }) => {
-  const [budget, setBudget] = useState(0);
+const BudgetFormContainer = ({ onSave }) => {
+  const [budgetInput, setBudgetInput] = useState('');
 
   const handleChange = ({ target }) => {
-    setBudget(target.value);
+    setBudgetInput(target.value);
   };
 
   const handleSubmit = e => {
     e.preventDefault();
 
-    onSave(budget);
-    setBudget(0);
+    onSave(budgetInput);
+    setBudgetInput('');
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Label customStyles={labelStyles}>
-        Enter your total budget
-        <Input type="number" value={budget} onChange={handleChange} />
-      </Label>
-
-      <Button label="Save" type="submit" />
-    </Form>
+    <BudgetForm
+      onSubmit={handleSubmit}
+      value={budgetInput}
+      onChange={handleChange}
+    />
   );
 };
 
-export default BudgetForm;
+const mapDispatchToProps = dispatch => ({
+  onSave: value => dispatch(setBudget(value)),
+});
+
+export default connect(null, mapDispatchToProps)(BudgetFormContainer);
